@@ -5,4 +5,5 @@
     <File Path="README.md" />
   </Folder>
   <Project Path="EncurtadorUrl.Api/EncurtadorUrl.Api.csproj" Id="6e1e2271-c672-4349-91dd-f37096c5775b" />
+  <Project Path="EncurtadorUrl.Data/EncurtadorUrl.Data.csproj" Id="9b00736f-ebe9-45e7-b37e-51da43c60591" />
 </Solution>

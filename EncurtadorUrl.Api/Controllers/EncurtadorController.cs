@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using EncurtadorUrl.Api.DTO;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EncurtadorUrl.Api.Controllers
@@ -11,6 +12,14 @@ namespace EncurtadorUrl.Api.Controllers
         public IActionResult Get()
         {
             return Ok("Encurtador de URL API is running.");
+        }
+
+        [HttpPost]
+        public IActionResult Post([FromBody] UrlDTO url)
+        {
+            int hashCode = url.GetHashCode();
+
+            return Ok(hashCode);
         }
     }
 }
