@@ -6,9 +6,9 @@ namespace EncurtadorUrl.Data.Model
 {
     public class Url
     {
-        public int id { get; set; }
-        public string urlOriginal { get; set; }
-        public string urlEncurtada { get; set; }
-        public DateTime dataExpiracao { get; set; }
+        public int ID { get; set; }
+        public string UrlOriginal { get; set; }
+        public string UrlEncurtada { get; set; }
+        public DateTime DataExpiracao { get; set; }
     }
 }

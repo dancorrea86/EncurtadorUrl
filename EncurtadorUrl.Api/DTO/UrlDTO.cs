@@ -2,6 +2,6 @@
 {
     public class UrlDTO
     {
-        string url { get; set; }
+        public string Url { get; set; }
     }
 }

@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EncurtadorUrl.Data\EncurtadorUrl.Data.csproj" />
+    <ProjectReference Include="..\EncurtadorUrl.Service\EncurtadorUrl.Service.csproj" />
   </ItemGroup>
 
   <ItemGroup>
