@@ -1,4 +1,6 @@
 ﻿using EncurtadorUrl.Api.DTO;
+using EncurtadorUrl.Data.Context;
+using EncurtadorUrl.Service.Encurtador;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,6 +10,13 @@ namespace EncurtadorUrl.Api.Controllers
     [ApiController]
     public class EncurtadorController : ControllerBase
     {
+        private readonly IUrlService _service;
+
+        public EncurtadorController(IUrlService context)
+        {
+            this._service = context;
+        }
+
         [HttpGet]
         public IActionResult Get()
         {
@@ -17,9 +26,18 @@ namespace EncurtadorUrl.Api.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] UrlDTO url)
         {
-            int hashCode = url.GetHashCode();
+            string esquema = Request.Scheme;
+            string host = Request.Host.ToString();     
+
+            string hashCode = _service.EncurtarUrl(url.Url, esquema, host);
 
             return Ok(hashCode);
+        }
+
+        [HttpGet("{hash}")]
+        public IActionResult Get(string hash)
+        {
+            return Ok("Redirecionamento.");
         }
     }
 }

@@ -75,6 +75,12 @@ Essa função vai chamar o método GetHashCode do C# para gerar uma chave Hash.
 
 Vai salvar no banco de dados esse Hash com a URL em uma esquema de chave valor.
 
+### Dia 3 - 25/04/2026 - Implementação da interface gráfica
+
+Eu estudei algumas formas de fazer a interface gráfica, e decidi utilizar o Blazor para criar uma aplicação web interativa.
+
+A página será simples, com um campo de texto para o usuário colar a URL original e um botão para encurtar a URL.
+
 
 
 
