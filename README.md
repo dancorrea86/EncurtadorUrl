@@ -83,6 +83,30 @@ Criei o service para realizar a criação da url encurtada, utilizando o HttpCli
 
 A página será simples, com um campo de texto para o usuário colar a URL original e um botão para encurtar a URL.
 
+### Dia 4 — 26/04/2026 — Desenvolvimento da Interface Gráfica
+
+Neste dia, foquei na criação do formulário em **Blazor** e na integração com o backend para o encurtamento de URLs.
+
+#### 1. Configuração do Cliente HTTP
+
+Para viabilizar as requisições para a API, utilizei o pacote `Microsoft.Extensions.Http`. A instalação foi realizada via Console do Gerenciador de Pacotes:
+
+```bash
+Install-Package Microsoft.Extensions.Http
+```
+
+Em seguida, registrei o serviço do `HttpClient` no arquivo `Program.cs` para permitir a injeção de dependência em toda a aplicação:
+
+```csharp
+builder.Services.AddHttpClient();
+```
+
+#### 2. Ajustes na API e Comunicação
+
+* **CORS:** Configurei as políticas de CORS na API, permitindo que o front-end Blazor realize requisições de forma segura e sem bloqueios pelo navegador.
+* **Controller:** Refatorei o controller da API para processar as chamadas originadas pela interface gráfica, garantindo o recebimento correto dos dados e o retorno da URL encurtada.
+
+
 
 
 

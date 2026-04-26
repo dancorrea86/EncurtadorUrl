@@ -15,15 +15,25 @@ builder.Services.AddDbContext<EncurtadorUrlDbContext>(options =>
 
 builder.Services.AddScoped<IUrlService, UrlService>();
 
-var app = builder.Build();
+// 1. Adicione o serviço de CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Livre", policy =>
+    {
+        policy.AllowAnyOrigin() // Em produção, mude para o domínio específico
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 
+WebApplication app = builder.Build();
 
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+app.UseCors("Livre");
 
 app.UseHttpsRedirection();
 
