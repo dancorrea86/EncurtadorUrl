@@ -1,72 +1,112 @@
-﻿@page "/"
-@inject ILogger<UrlDTO> Logger
+@page "/"
 @using System.Text.Json
-@using System.Text.Json.Serialization
-
+@using System.Net.Http.Json
 @inject IHttpClientFactory ClientFactory
+@inject ILogger<Home> Logger
 
-<PageTitle>Encurtador URL</PageTitle>
+<PageTitle>1Link - Encurtador de URL</PageTitle>
 
-<div class="container">
-    <div class="row">
-        <div class="col align-middle">
-            <h1>Encurtador de URL</h1>
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="card-body p-5">
+                <div class="text-center mb-4">
+                    <h1 class="display-5 fw-bold text-primary">Encurte seus links</h1>
+                    <p class="text-muted">Cole sua URL longa abaixo para criar um link curto e fácil de compartilhar.</p>
+                </div>
+
+                <EditForm Model="Model" OnValidSubmit="Submit">
+                    <DataAnnotationsValidator />
+                    <div class="input-group input-group-lg mb-3">
+                        <span class="input-group-text bg-white border-end-0">
+                             <i class="bi bi-link"></i>
+                        </span>
+                        <InputText @bind-Value="Model.Url" 
+                                  placeholder="Cole aqui o link (ex: https://google.com)" 
+                                  class="form-control border-start-0" />
+                        <button type="submit" class="btn btn-primary px-4 fw-bold" disabled="@isProcessing">
+                            @if (isProcessing)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            }
+                            Encurtar
+                        </button>
+                    </div>
+                    <ValidationMessage For="@(() => Model.Url)" class="text-danger small" />
+                </EditForm>
+
+                @if (!string.IsNullOrEmpty(resultado))
+                {
+                    <div class="mt-4 p-3 bg-light rounded-3 border animate__animated animate__fadeIn">
+                        <label class="form-label fw-bold text-secondary small text-uppercase">Seu link curto:</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control bg-white fw-bold text-primary" value="@resultado" readonly />
+                            <button class="btn btn-outline-primary" @onclick="CopiarLink">
+                                Copiar
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
-        <div class="col d-flex align-items-center">
-            <p>Sobre</p>
+        
+        <div class="text-center mt-4">
+            <p class="text-muted small">Rápido, gratuito e sem anúncios.</p>
         </div>
-    </div>
-    <div>
-        <h1>Hello, world!</h1>
-        <EditForm Model="Model" OnSubmit="Submit">
-            <InputText @bind-Value="Model.Url" class="form-control" />
-            <button type="submit" class="btn btn-primary mt-2">Encurtar URL</button>
-        </EditForm>
-
-        @if (resultado != null)
-        {
-            <p>Resposta da API: @resultado</p>
-        }
     </div>
 </div>
 
-@code{
+@code {
     private UrlDTO Model { get; set; } = new();
     private string? resultado;
+    private bool isProcessing = false;
 
     private async Task Submit()
     {
-        Logger.LogInformation("Enviando URL: {url}", Model.Url);
-        await ExecutarChamadaApi();
-    }
-
-    private async Task ExecutarChamadaApi()
-    {
+        if (string.IsNullOrWhiteSpace(Model.Url)) return;
+        
+        isProcessing = true;
+        resultado = null;
+        
         try
         {
             var client = ClientFactory.CreateClient();
-            
-            // Usando a forma mais moderna e segura que já cuida do JSON e Headers
             var response = await client.PostAsJsonAsync("http://localhost:5090/api/encurtador", Model);
 
             if (response.IsSuccessStatusCode)
             {
-                resultado = await response.Content.ReadAsStringAsync();
-                Logger.LogInformation("Sucesso!");
+                // Supondo que a API retorna um objeto com { urlCurta: "..." }
+                var data = await response.Content.ReadFromJsonAsync<ApiResponse>();
+                resultado = data?.Url;
+                Logger.LogInformation("URL encurtada com sucesso!");
             }
             else
             {
-                resultado = $"Erro: {response.StatusCode}";
+                resultado = "Erro ao processar a URL. Verifique se o link é válido.";
             }
         }
         catch (Exception ex)
         {
-            resultado = $"Erro de conexão: {ex.Message}";
-            Logger.LogError(ex, "Falha ao conectar na API");
+            resultado = "Não foi possível conectar à API. Verifique se o servidor está rodando.";
+            Logger.LogError(ex, "Erro de conexão");
+        }
+        finally
+        {
+            isProcessing = false;
         }
     }
 
+    private void CopiarLink()
+    {
+        // Aqui você poderia usar JS Interop para copiar para o clipboard
+    }
+
     public class UrlDTO
+    {
+        public string Url { get; set; } = string.Empty;
+    }
+
+    public class ApiResponse
     {
         public string Url { get; set; } = string.Empty;
     }

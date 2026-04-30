@@ -31,7 +31,9 @@ namespace EncurtadorUrl.Api.Controllers
 
             string hashCode = _service.EncurtarUrl(url.Url, esquema, host);
 
-            return Ok(hashCode);
+            var urlEncurtada = new UrlDTO { Url = hashCode };
+
+            return Ok(urlEncurtada);
         }
 
         [HttpGet("{hash}")]

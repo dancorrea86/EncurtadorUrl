@@ -105,8 +105,3 @@ builder.Services.AddHttpClient();
 
 * **CORS:** Configurei as políticas de CORS na API, permitindo que o front-end Blazor realize requisições de forma segura e sem bloqueios pelo navegador.
 * **Controller:** Refatorei o controller da API para processar as chamadas originadas pela interface gráfica, garantindo o recebimento correto dos dados e o retorno da URL encurtada.
-
-
-
-
-
