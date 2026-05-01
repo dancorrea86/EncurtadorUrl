@@ -26,20 +26,19 @@ namespace EncurtadorUrl.Api.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] UrlDTO url)
         {
+            if (!Uri.IsWellFormedUriString(url.Url, UriKind.Absolute))
+            { 
+                return BadRequest("Por favor, insira uma URL válida.");
+            };
+
             string esquema = Request.Scheme;
             string host = Request.Host.ToString();     
 
             string hashCode = _service.EncurtarUrl(url.Url, esquema, host);
 
-            var urlEncurtada = new UrlDTO { Url = hashCode };
+            UrlDTO urlEncurtada = new UrlDTO { Url = hashCode };
 
-            return Ok(urlEncurtada);
-        }
-
-        [HttpGet("{hash}")]
-        public IActionResult Get(string hash)
-        {
-            return Ok("Redirecionamento.");
+            return CreatedAtAction(nameof(Post), urlEncurtada);
         }
     }
 }

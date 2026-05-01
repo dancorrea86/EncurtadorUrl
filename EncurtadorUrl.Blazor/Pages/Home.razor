@@ -3,6 +3,7 @@
 @using System.Net.Http.Json
 @inject IHttpClientFactory ClientFactory
 @inject ILogger<Home> Logger
+@inject ClipboardService ClipboardService
 
 <PageTitle>1Link - Encurtador de URL</PageTitle>
 
@@ -70,8 +71,14 @@
         
         try
         {
+            if (!Uri.IsWellFormedUriString(Model.Url, UriKind.Absolute))
+            {
+                resultado = "Por favor, insira uma URL válida.";
+                return;
+            };
+
             var client = ClientFactory.CreateClient();
-            var response = await client.PostAsJsonAsync("http://localhost:5090/api/encurtador", Model);
+            var response = await client.PostAsJsonAsync("https://localhost:7099/api/encurtador", Model);
 
             if (response.IsSuccessStatusCode)
             {
@@ -96,9 +103,9 @@
         }
     }
 
-    private void CopiarLink()
+    private async void CopiarLink()
     {
-        // Aqui você poderia usar JS Interop para copiar para o clipboard
+
     }
 
     public class UrlDTO

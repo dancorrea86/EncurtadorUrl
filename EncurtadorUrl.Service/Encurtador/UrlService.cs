@@ -24,11 +24,16 @@ namespace EncurtadorUrl.Service.Encurtador
             return urlFinal;
         }
 
-        public void Redirect(string hash)
+        public string Redirect(string hash)
         {
-    
+            var url = _contexto.Urls.Where(u => u.UrlEncurtada.EndsWith(hash)).FirstOrDefault();
 
- 
+            if (url != null)
+            {
+                return url.UrlOriginal;
+            }
+
+            return null;
         }
     }
 }
