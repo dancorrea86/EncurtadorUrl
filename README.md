@@ -112,3 +112,6 @@ Cria controller de redirecionamento.
 Cria serviço para realizar a busca da url original.
 Cria validações para garantir URLs válidas.
 
+#### 1. Criando processo de copiar para a URL para o clipboard
+
+

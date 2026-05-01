@@ -61,6 +61,7 @@
     private UrlDTO Model { get; set; } = new();
     private string? resultado;
     private bool isProcessing = false;
+    string text;
 
     private async Task Submit()
     {
@@ -105,7 +106,14 @@
 
     private async void CopiarLink()
     {
-
+        try
+        {
+            await ClipboardService.WriteTextAsync(resultado);
+        }
+        catch
+        {
+            Console.WriteLine("Cannot write text to clipboard");
+        }   
     }
 
     public class UrlDTO
