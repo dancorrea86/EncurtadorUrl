@@ -79,7 +79,7 @@
             };
 
             var client = ClientFactory.CreateClient();
-            var response = await client.PostAsJsonAsync("https://localhost:7099/api/encurtador", Model);
+            var response = await client.PostAsJsonAsync("http://localhost:7099/api/encurtador", Model);
 
             if (response.IsSuccessStatusCode)
             {

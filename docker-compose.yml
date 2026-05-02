@@ -1,0 +1,23 @@
+services:
+  api:
+    image: encurtador-api
+    build:
+      context: .
+      dockerfile: EncurtadorUrl.Api/Dockerfile
+    ports:
+      - "7099:8080"
+    volumes:
+      - ./EncurtadorUrl.Api/Data:/app/Data
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Data Source=Data/encurtador.db
+
+  blazor:
+    image: encurtador-blazor
+    build:
+      context: .
+      dockerfile: EncurtadorUrl.Blazor/Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
