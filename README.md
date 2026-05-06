@@ -114,4 +114,12 @@ Cria validações para garantir URLs válidas.
 
 #### 1. Criando processo de copiar para a URL para o clipboard
 
+Criei um serviço para copiar a URL encurtada para o clipboard do usuário, utilizando a API de Clipboard do navegador.
+
+### Dia 6 - 05/05/2026 - Configuração do ambiente de produção
+
+Eu tive algumas dificuldades para configurar o blazor dentro do Docker Compose. 
+
+Eu tive que criar um Dockerfile para o projeto Blazor e um Dockerfile para o projeto da API.
+
 

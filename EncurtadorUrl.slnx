@@ -2,9 +2,9 @@
   <Folder Name="/Solution Items/">
     <File Path=".gitattributes" />
     <File Path=".gitignore" />
-    <File Path="docker-compose.yml" />
     <File Path="README.md" />
   </Folder>
+  <Project Path="Encurtador.Blazor2/Encurtador.Blazor2.csproj" Id="1cfeda5c-5aa7-4eb2-81c8-a2dd5b6e4f4c" />
   <Project Path="EncurtadorUrl.Api/EncurtadorUrl.Api.csproj" Id="6e1e2271-c672-4349-91dd-f37096c5775b" />
   <Project Path="EncurtadorUrl.Blazor/EncurtadorUrl.Blazor.csproj" Id="c6012ca5-57b4-46b4-8643-78c41f5ca397" />
   <Project Path="EncurtadorUrl.Data/EncurtadorUrl.Data.csproj" Id="9b00736f-ebe9-45e7-b37e-51da43c60591" />
