@@ -1,125 +1,156 @@
 # Encurtador de URL
 
-Esse projeto tem como objetivo criar um encurtador de URL utilizando a linguagem de programação C#.
-É um projeto de estudos para aprender mais sobre desenvolvimento web e manipulação de URLs.
+Este projeto tem como objetivo criar um encurtador de URL utilizando **C#**. A proposta é servir como estudo prático de desenvolvimento web, integração entre front-end e back-end, persistência de dados e manipulação de URLs.
 
-## Plano de Desenvolvimento
+## Objetivo do projeto
 
-1. Criar uma API para receber as URLs a serem encurtadas.
-2. Criar um banco de dados para armazenar as URLs originais e as URLs encurtadas.
-3. Implementar a lógica para gerar as URLs encurtadas.
-4. Criar uma interface para os usuários acessarem as URLs encurtadas.
+A aplicação permitirá que o usuário informe uma URL original e receba uma versão encurtada para compartilhamento. O sistema também será responsável por armazenar o vínculo entre a URL original e a URL curta, além de redirecionar corretamente o acesso quando a URL encurtada for utilizada.
 
-## Tecnologias Utilizadas
+## Plano de desenvolvimento
+
+- Criar uma API para receber as URLs a serem encurtadas.
+- Criar um banco de dados para armazenar as URLs originais e as URLs encurtadas.
+- Implementar a lógica responsável por gerar as URLs encurtadas.
+- Criar uma interface para os usuários acessarem e gerarem URLs encurtadas.
+
+## Tecnologias utilizadas
 
 - C#
-- SQLIte
-- Blazor (para a interface)
+- SQLite
+- Blazor, para a interface web
+- ASP.NET Core Web API, para o backend da aplicação
+- Entity Framework Core, para acesso e persistência dos dados com SQLite [1][2]
 
-## Diário de Desenvolvimento
+## Arquitetura pensada
+
+A solução foi organizada com separação entre interface, API e camada de dados.
+
+### Fluxo esperado
+
+1. O usuário cola uma URL na interface.
+2. O front-end envia a requisição para a API.
+3. A API gera uma chave curta para a URL.
+4. A aplicação salva a relação entre URL original e URL encurtada no banco de dados.
+5. Quando a URL curta é acessada, o sistema localiza a URL original e realiza o redirecionamento.
+
+## Diário de desenvolvimento
 
 ### Dia 1 - 23/04/2026 - Criação do projeto
 
-Criei uma solução no Visual Studio.
+Foi criada uma solução no Visual Studio com o comando abaixo:
 
 ```bash
 dotnet new sln -n EncurtadorDeURL
 ```
 
-Crie um repositório Git para o projeto e esse arquivo README.md.
+Também foi criado o repositório Git do projeto e este arquivo `README.md`.
 
-Crie um projeto de API para o backend, utilizando o template de API do .NET (ASP.NET Core Web API). Eu fiz uma limpeza do projeto, removendo os arquivos desnecessários e 
-crie um controller inicial "api/encurtador" para receber as URLs a serem encurtadas. Rodei o projeto para garantir que a API estava funcionando corretamente.
+Na sequência, foi criado um projeto de API para o backend usando o template de **ASP.NET Core Web API**. Depois da criação inicial, foi feita uma limpeza dos arquivos padrão e um controller inicial em `api/encurtador` foi adicionado para receber as URLs enviadas pela interface. Por fim, a aplicação foi executada para validar que a API estava funcionando corretamente.
 
 ### Dia 2 - 24/04/2026 - Configuração do banco de dados
 
-Seguindo a documentação da Microsoft, eu configurei o Entity Framework Core para utilizar o SQLite como banco de dados.
-https://learn.microsoft.com/pt-br/ef/core/
-Eu fiz a instalação do pacote do Entity Framework Core para SQLite, utilizando o seguinte pacote pelo Nuget:
+Seguindo a documentação do Entity Framework Core, foi configurado o uso do provedor SQLite para persistência dos dados da aplicação [1][2].
+
+Os pacotes instalados foram:
 
 ```bash
 Microsoft.EntityFrameworkCore.Sqlite
-```
-
-Também o pacote Entity Framework Core Tools Design para habilitar as migrações:
-```bash
 Microsoft.EntityFrameworkCore.Design
-```
-
-Também instalei o pacote do Entity Framework Core Tools para habilitar as migrações:
-```bash
 Microsoft.EntityFrameworkCore.Tools
 ```
 
-Crie um prote DATA para o guardar as conexões de banco de dados. Crie o DbContext para o Entity Framework Core, 
-definindo as entidades para as URLs originais e encurtadas. 
+Foi criado um projeto `Data` para concentrar a configuração de acesso ao banco. Nele, foi implementado o `DbContext` com as entidades responsáveis por armazenar as URLs originais e suas versões encurtadas.
 
-Eu coloquei a referencia do projeto Data no projeto da API para poder utilizar o DbContext e as entidades.
-Eu configurei a string de conexão para o banco no appsettings.json da API, utilizando o seguinte formato:
+Depois disso, o projeto de dados foi referenciado pela API para permitir o uso do `DbContext` e das entidades.
+
+A string de conexão foi configurada no `appsettings.json` da API da seguinte forma:
+
 ```json
-
 "ConnectionStrings": {
-	"DefaultConnection": "Data Source=encurtador.db"
+  "DefaultConnection": "Data Source=encurtador.db"
 }
 ```
 
-Após essas configurações, eu rodei as migrações para criar o banco de dados e as tabelas necessárias.
+Após a configuração, foram executadas as migrações para criar o banco de dados e as tabelas necessárias.
 
-#### Programação da função para gerar as URLs encurtadas
+### Geração da URL encurtada
 
-Como decisão de design do projeto, vou ter uma interface grafica, onde o cliente vai colar uma URL, por exemplo, www.google.com.br, 
-A interface gráfica vai ter um botão de encurtar, quando o cliente clicar nesse botão, o a interface gráfica vai chamar uma API, que vai 
-fazer um hash da string e retornar uma url encurtada.
+Como decisão de design, a aplicação terá uma interface gráfica em que o usuário poderá colar uma URL, como por exemplo `www.google.com.br`, e clicar em um botão para gerar a versão encurtada.
 
-Essa função vai chamar o método GetHashCode do C# para gerar uma chave Hash.
+A interface fará uma chamada para a API, que ficará responsável pela lógica de geração da chave curta e pelo armazenamento do vínculo entre a chave e a URL original.
 
-Vai salvar no banco de dados esse Hash com a URL em uma esquema de chave valor.
+A ideia inicial foi utilizar o método `GetHashCode()` do C# para gerar uma chave hash. No entanto, para produção ou para evitar colisões e inconsistências entre execuções, essa estratégia merece revisão, já que o valor gerado por `GetHashCode()` não é uma escolha confiável como identificador público persistente. Uma abordagem baseada em identificador único, codificação Base62 ou geração de chave aleatória tende a ser mais estável para esse tipo de sistema.
 
 ### Dia 3 - 25/04/2026 - Implementação da interface gráfica
 
-Eu estudei algumas formas de fazer a interface gráfica, e decidi utilizar o Blazor para criar uma aplicação web interativa.
+Após estudar algumas alternativas para a interface, foi decidido utilizar **Blazor** para criar uma aplicação web interativa.
 
-Criei o service para realizar a criação da url encurtada, utilizando o HttpClient para fazer as requisições para a API.
+Foi criado um serviço responsável por solicitar a criação da URL encurtada, utilizando `HttpClient` para comunicação com a API. Esse padrão é coerente com a forma como aplicações Blazor consomem APIs HTTP [3].
 
-A página será simples, com um campo de texto para o usuário colar a URL original e um botão para encurtar a URL.
+A página inicial foi planejada com uma proposta simples:
 
-### Dia 4 — 26/04/2026 — Desenvolvimento da Interface Gráfica
+- Um campo de texto para colar a URL original.
+- Um botão para acionar o encurtamento.
+- A exibição da URL curta retornada pela API.
 
-Neste dia, foquei na criação do formulário em **Blazor** e na integração com o backend para o encurtamento de URLs.
+### Dia 4 - 26/04/2026 - Desenvolvimento da interface gráfica
 
-#### 1. Configuração do Cliente HTTP
+Neste dia, o foco foi a criação do formulário em Blazor e a integração com o backend.
 
-Para viabilizar as requisições para a API, utilizei o pacote `Microsoft.Extensions.Http`. A instalação foi realizada via Console do Gerenciador de Pacotes:
+#### 1. Configuração do cliente HTTP
+
+Para viabilizar as requisições HTTP, foi utilizado o pacote abaixo:
 
 ```bash
 Install-Package Microsoft.Extensions.Http
 ```
 
-Em seguida, registrei o serviço do `HttpClient` no arquivo `Program.cs` para permitir a injeção de dependência em toda a aplicação:
+Em seguida, o serviço foi registrado no `Program.cs` com:
 
 ```csharp
 builder.Services.AddHttpClient();
 ```
 
-#### 2. Ajustes na API e Comunicação
+Esse registro permite a criação e injeção de clientes HTTP configurados na aplicação, prática comum no ecossistema ASP.NET Core e Blazor [3].
 
-* **CORS:** Configurei as políticas de CORS na API, permitindo que o front-end Blazor realize requisições de forma segura e sem bloqueios pelo navegador.
-* **Controller:** Refatorei o controller da API para processar as chamadas originadas pela interface gráfica, garantindo o recebimento correto dos dados e o retorno da URL encurtada.
+#### 2. Ajustes na API e comunicação
 
-### Dia 5 - 30/04/2026 - Desenvovimento de redirecionamento
+Foi necessário configurar **CORS** na API para permitir chamadas do front-end hospedado em outra origem. Na documentação da Microsoft, CORS é descrito como o mecanismo que permite ao servidor liberar requisições entre origens diferentes, contornando a política padrão do navegador de mesma origem [4][5].
 
-Cria controller de redirecionamento.
-Cria serviço para realizar a busca da url original.
-Cria validações para garantir URLs válidas.
+Também foi feita uma refatoração do controller da API para processar corretamente as chamadas vindas da interface e retornar a URL encurtada.
 
-#### 1. Criando processo de copiar para a URL para o clipboard
+> Observação importante: ao configurar CORS no ASP.NET Core, a documentação recomenda atenção à ordem do middleware. `UseCors` deve ser executado depois de `UseRouting` e antes de `UseAuthorization` [5].
 
-Criei um serviço para copiar a URL encurtada para o clipboard do usuário, utilizando a API de Clipboard do navegador.
+### Dia 5 - 30/04/2026 - Desenvolvimento do redirecionamento
+
+Foi criado o controller de redirecionamento, além do serviço responsável por localizar a URL original a partir da chave encurtada.
+
+Também foram adicionadas validações para garantir que apenas URLs válidas sejam processadas.
+
+#### Copiar URL para o clipboard
+
+Além do redirecionamento, foi criado um serviço para copiar a URL encurtada para a área de transferência do usuário, utilizando a API de Clipboard do navegador.
 
 ### Dia 6 - 05/05/2026 - Configuração do ambiente de produção
 
-Eu tive algumas dificuldades para configurar o blazor dentro do Docker Compose. 
+Nesta etapa surgiram dificuldades na configuração do Blazor com Docker Compose.
 
-Eu tive que criar um Dockerfile para o projeto Blazor e um Dockerfile para o projeto da API.
+Para resolver a estrutura de execução, foi necessário criar:
 
+- Um `Dockerfile` para o projeto Blazor.
+- Um `Dockerfile` para o projeto da API.
 
+Essa separação ajuda a organizar melhor o processo de build e execução de cada parte da aplicação no ambiente de containers.
+
+## Próximos passos sugeridos
+
+- Substituir `GetHashCode()` por uma estratégia de geração de chave mais estável.
+- Adicionar tratamento para URLs duplicadas, evitando gerar novos códigos para o mesmo endereço sem necessidade.
+- Implementar expiração opcional para links encurtados.
+- Adicionar métricas simples de acesso, como quantidade de cliques por URL.
+- Publicar a aplicação com configuração completa em Docker Compose.
+
+## Referências
+
+- Documentação do provedor SQLite para EF Core: [Microsoft Learn](https://learn.microsoft.com/pt-br/ef/core/providers/sqlite/) [1][2]
+- Documentação sobre CORS no ASP.NET Core: [Microsoft Learn](https://learn.microsoft.com/en-us/aspnet/core/security/cors?view=aspnetcore-10.0) [4][5]
