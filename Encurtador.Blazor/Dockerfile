@@ -8,7 +8,7 @@ RUN apt update \
     && dotnet workload install wasm-tools
 
 COPY . .
-RUN dotnet publish Encurtador.Blazor2.csproj --output /app
+RUN dotnet publish Encurtador.Blazor.csproj --output /app
 
 # Runtime stage
 FROM nginx:latest

@@ -1,6 +1,6 @@
 # Encurtador de URL
 
-Este projeto tem como objetivo criar um encurtador de URL utilizando **C#**. A proposta é servir como estudo prático de desenvolvimento web, integração entre front-end e back-end, persistência de dados e manipulação de URLs.
+Este projeto tem como objetivo criar um encurtador de URL utilizando **C#**. A proposta é servir como estudo prático de desenvolvimento web, integração entre frontend e backend, persistência de dados e manipulação de URLs.
 
 ## Objetivo do projeto
 
@@ -28,10 +28,73 @@ A solução foi organizada com separação entre interface, API e camada de dado
 ### Fluxo esperado
 
 1. O usuário cola uma URL na interface.
-2. O front-end envia a requisição para a API.
+2. O frontend envia a requisição para a API.
 3. A API gera uma chave curta para a URL.
 4. A aplicação salva a relação entre URL original e URL encurtada no banco de dados.
 5. Quando a URL curta é acessada, o sistema localiza a URL original e realiza o redirecionamento.
+
+## Como Instalar e Executar
+
+Existem duas formas principais de rodar o projeto localmente: utilizando **Docker Compose** ou via **CLI do .NET**.
+
+### Pré-requisitos
+
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (opcional, para rodar via container)
+- [Git](https://git-scm.com/)
+
+### Clonando o repositório
+
+```bash
+git clone https://github.com/seu-usuario/EncurtadorUrl.git
+cd EncurtadorUrl
+```
+
+### Opção 1: Usando Docker Compose (Recomendado)
+
+Esta é a forma mais simples, pois já configura o banco de dados e as dependências automaticamente.
+
+1. Na raiz do projeto, execute:
+   ```bash
+   docker-compose up --build
+   ```
+2. Após o build, os serviços estarão disponíveis em:
+   - **Frontend (Blazor):** [http://localhost:8080](http://localhost:8080)
+   - **Backend (API):** [http://localhost:7099](http://localhost:7099)
+
+### Opção 2: Usando CLI do .NET
+
+Para rodar manualmente, você precisará executar o Backend e o Frontend separadamente.
+
+#### 1. Configurar o Banco de Dados (API)
+
+A partir da raiz do projeto, execute o comando abaixo para aplicar as migrações do Entity Framework e criar o banco SQLite:
+
+```bash
+dotnet ef database update --project EncurtadorUrl.Data --startup-project EncurtadorUrl.Api
+```
+
+> **Nota:** Se você não tiver a ferramenta do EF instalada, use: `dotnet tool install --global dotnet-ef`
+
+#### 2. Executar a API
+
+Vá para a pasta da API e execute:
+
+```bash
+cd EncurtadorUrl.Api
+dotnet run
+```
+A API iniciará por padrão na porta `7099`.
+
+#### 3. Executar o Frontend (Blazor)
+
+Em um novo terminal, a partir da raiz do projeto, vá para a pasta do projeto Blazor e execute:
+
+```bash
+cd Encurtador.Blazor
+dotnet run
+```
+O Blazor iniciará por padrão na porta `8080`.
 
 ## Diário de desenvolvimento
 
@@ -115,7 +178,7 @@ Esse registro permite a criação e injeção de clientes HTTP configurados na a
 
 #### 2. Ajustes na API e comunicação
 
-Foi necessário configurar **CORS** na API para permitir chamadas do front-end hospedado em outra origem. Na documentação da Microsoft, CORS é descrito como o mecanismo que permite ao servidor liberar requisições entre origens diferentes, contornando a política padrão do navegador de mesma origem [4][5].
+Foi necessário configurar **CORS** na API para permitir chamadas do frontend hospedado em outra origem. Na documentação da Microsoft, CORS é descrito como o mecanismo que permite ao servidor liberar requisições entre origens diferentes, contornando a política padrão do navegador de mesma origem [4][5].
 
 Também foi feita uma refatoração do controller da API para processar corretamente as chamadas vindas da interface e retornar a URL encurtada.
 
