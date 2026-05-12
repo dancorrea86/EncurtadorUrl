@@ -25,6 +25,8 @@ A aplicação permitirá que o usuário informe uma URL original e receba uma ve
 
 A solução foi organizada com separação entre interface, API e camada de dados.
 
+![Design do Projeto](Design.jpg)
+
 ### Fluxo esperado
 
 1. O usuário cola uma URL na interface.

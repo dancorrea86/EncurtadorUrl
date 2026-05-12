@@ -2,6 +2,7 @@
   <Folder Name="/Solution Items/">
     <File Path=".gitattributes" />
     <File Path=".gitignore" />
+    <File Path="Design.jpg" />
     <File Path="README.md" />
   </Folder>
   <Project Path="Encurtador.Blazor/Encurtador.Blazor.csproj" />
